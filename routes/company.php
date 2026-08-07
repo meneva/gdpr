@@ -6,6 +6,7 @@ use App\Http\Controllers\CompanySwitchController;
 use App\Http\Controllers\DataBreachController;
 use App\Http\Controllers\DpiaController;
 use App\Http\Controllers\SubjectAccessRequestController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 // Onboarding routes: reachable even before a company is selected.
@@ -44,6 +45,5 @@ Route::middleware(['auth', 'verified', 'ensure.company.selected'])->group(functi
 
     Route::resource('dpias', DpiaController::class);
 
-    // Repeat the same resource-route shape for each remaining module:
-    // Route::resource('suppliers', SupplierController::class);
+    Route::resource('suppliers', SupplierController::class);
 });

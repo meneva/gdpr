@@ -3,7 +3,8 @@
 
     Open resources/views/navigation-menu.blade.php and add these links
     alongside the existing nav items, in both the desktop and mobile
-    sections.
+    sections. This is the FULL set — all five compliance modules plus
+    Members, the complete roadmap.
 --}}
 
 {{-- Desktop nav links --}}
@@ -17,6 +18,10 @@
 
 <x-nav-link :href="route('dpias.index')" :active="request()->routeIs('dpias.*')">
     {{ __('DPIAs') }}
+</x-nav-link>
+
+<x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">
+    {{ __('Suppliers') }}
 </x-nav-link>
 
 <x-nav-link :href="route('companies.members')" :active="request()->routeIs('companies.members')">
@@ -36,6 +41,10 @@
     {{ __('DPIAs') }}
 </x-responsive-nav-link>
 
+<x-responsive-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">
+    {{ __('Suppliers') }}
+</x-responsive-nav-link>
+
 <x-responsive-nav-link :href="route('companies.members')" :active="request()->routeIs('companies.members')">
     {{ __('Members') }}
 </x-responsive-nav-link>
@@ -44,8 +53,3 @@
 @auth
     <x-company-switcher :user="auth()->user()" />
 @endauth
-
-{{--
-    As you build Suppliers next, add one more pair of nav links here in
-    the same shape.
---}}
