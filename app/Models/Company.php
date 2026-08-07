@@ -38,6 +38,11 @@ class Company extends Model
         return $this->hasMany(DataBreach::class);
     }
 
+    public function dpias(): HasMany
+    {
+        return $this->hasMany(Dpia::class);
+    }
+
     // As you build each new module (DataBreach, Dpia, Supplier, ...),
     // add a matching hasMany() here — it keeps "everything this company
     // owns" discoverable from one place.

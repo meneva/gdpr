@@ -4,6 +4,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyInvitationController;
 use App\Http\Controllers\CompanySwitchController;
 use App\Http\Controllers\DataBreachController;
+use App\Http\Controllers\DpiaController;
 use App\Http\Controllers\SubjectAccessRequestController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,10 +39,11 @@ Route::middleware(['auth', 'verified', 'ensure.company.selected'])->group(functi
         ->parameters(['sars' => 'sar']);
 
     Route::resource('data-breaches', DataBreachController::class)
-    ->parameters(['data-breaches' => 'breach'])
-    ->names('breaches');
+        ->parameters(['data-breaches' => 'breach'])
+        ->names('breaches');
+
+    Route::resource('dpias', DpiaController::class);
 
     // Repeat the same resource-route shape for each remaining module:
-    // Route::resource('dpias', DpiaController::class);
     // Route::resource('suppliers', SupplierController::class);
 });
