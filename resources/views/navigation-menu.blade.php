@@ -65,6 +65,10 @@
                 {{ __('Processing Activities') }}
             </x-nav-link>
 
+            <x-nav-link :href="route('training-courses.index')" :active="request()->routeIs('training-courses.*')">
+                {{ __('Staff Training') }}
+            </x-nav-link>
+
             <x-nav-link :href="route('companies.members')" :active="request()->routeIs('companies.members')">
                 {{ __('Members') }}
             </x-nav-link>

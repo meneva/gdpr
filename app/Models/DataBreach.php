@@ -13,7 +13,7 @@ class DataBreach extends Model
 
     protected $fillable = [
         'company_id', 'title', 'description', 'severity', 'discovered_at',
-        'notify_deadline_at', 'status', 'ico_notified_at', 'resolved_at',
+        'notify_deadline_at', 'status', 'ico_notified_at', 'resolved_at', 'reminder_sent_at',
     ];
 
     protected $casts = [
@@ -21,6 +21,7 @@ class DataBreach extends Model
         'notify_deadline_at' => 'datetime',
         'ico_notified_at' => 'datetime',
         'resolved_at' => 'datetime',
+        'reminder_sent_at' => 'datetime',
     ];
 
     protected static function booted(): void

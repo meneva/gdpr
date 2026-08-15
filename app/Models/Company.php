@@ -53,6 +53,21 @@ class Company extends Model
         return $this->hasMany(ProcessingActivity::class);
     }
 
+    public function trainingCourses(): HasMany
+    {
+        return $this->hasMany(TrainingCourse::class);
+    }
+
+    /**
+     * Owner + admins — used as the fallback recipients for deadline
+     * reminders when a record (like a DataBreach, which has no assignee
+     * field) has no specific person to notify.
+     */
+    public function notifiableRecipients(): \Illuminate\Support\Collection
+    {
+        return $this->users()->wherePivotIn('role', ['owner', 'admin'])->get();
+    }
+
     // As you build each new module (DataBreach, Dpia, Supplier, ...),
     // add a matching hasMany() here — it keeps "everything this company
     // owns" discoverable from one place.

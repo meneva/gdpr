@@ -7,6 +7,7 @@ use App\Models\Dpia;
 use App\Models\ProcessingActivity;
 use App\Models\SubjectAccessRequest;
 use App\Models\Supplier;
+use App\Models\TrainingCompletion;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -30,6 +31,10 @@ class DashboardController extends Controller
 
         $ropaCount = ProcessingActivity::count();
 
+        $totalStaffEntries = TrainingCompletion::count();
+        $completedStaffEntries = TrainingCompletion::whereNotNull('completed_at')->count();
+        $trainingPct = $totalStaffEntries > 0 ? (int) round(100 * $completedStaffEntries / $totalStaffEntries) : null;
+
         return view('dashboard', [
             'openSarsCount' => $openSars->count(),
             'overdueSars' => $overdueSars,
@@ -38,6 +43,7 @@ class DashboardController extends Controller
             'pendingDpias' => $pendingDpias,
             'supplierGaps' => $supplierGaps,
             'ropaCount' => $ropaCount,
+            'trainingPct' => $trainingPct,
             'score' => $this->complianceScore($overdueSars, $urgentBreaches, $pendingDpias, $supplierGaps),
         ]);
     }

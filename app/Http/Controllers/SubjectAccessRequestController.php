@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSubjectAccessRequestRequest;
 use App\Http\Requests\UpdateSubjectAccessRequestRequest;
 use App\Models\SubjectAccessRequest;
+use App\Support\Exports\RegisterExport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -80,6 +81,43 @@ class SubjectAccessRequestController extends Controller
         $sar->delete();
 
         return redirect()->route('sars.index')->with('status', 'Deleted.');
+    }
+
+    public function exportCsv()
+    {
+        $this->authorize('viewAny', SubjectAccessRequest::class);
+
+        $headers = ['Reference', 'Requester', 'Type', 'Received', 'Deadline', 'Status', 'Assigned to'];
+
+        $rows = SubjectAccessRequest::query()->orderBy('received_at')->get()->map(fn ($sar) => [
+            $sar->ref_no,
+            $sar->requester_name,
+            ucfirst($sar->requester_type),
+            $sar->received_at->format('Y-m-d'),
+            $sar->deadline_at->format('Y-m-d'),
+            ucfirst(str_replace('_', ' ', $sar->status)),
+            $sar->assignee?->name ?? '',
+        ]);
+
+        return RegisterExport::csv('subject-access-requests.csv', $headers, $rows);
+    }
+
+    public function exportPdf()
+    {
+        $this->authorize('viewAny', SubjectAccessRequest::class);
+
+        $headers = ['Reference', 'Requester', 'Type', 'Received', 'Deadline', 'Status'];
+
+        $rows = SubjectAccessRequest::query()->orderBy('received_at')->get()->map(fn ($sar) => [
+            $sar->ref_no,
+            $sar->requester_name,
+            ucfirst($sar->requester_type),
+            $sar->received_at->format('d M Y'),
+            $sar->deadline_at->format('d M Y'),
+            ucfirst(str_replace('_', ' ', $sar->status)),
+        ]);
+
+        return RegisterExport::pdf('Subject Access Requests Register', $headers, $rows, 'subject-access-requests.pdf');
     }
 
     /**

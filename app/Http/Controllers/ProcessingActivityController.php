@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProcessingActivityRequest;
 use App\Http\Requests\UpdateProcessingActivityRequest;
 use App\Models\ProcessingActivity;
+use App\Support\Exports\RegisterExport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -70,5 +71,39 @@ class ProcessingActivityController extends Controller
         $activity->delete();
 
         return redirect()->route('processing-activities.index')->with('status', 'Deleted.');
+    }
+
+    public function exportCsv()
+    {
+        $this->authorize('viewAny', ProcessingActivity::class);
+
+        $headers = ['Reference', 'Activity', 'Legal Basis', 'Retention Period', 'Owner'];
+
+        $rows = ProcessingActivity::query()->orderBy('name')->get()->map(fn ($activity) => [
+            $activity->ref_no,
+            $activity->name,
+            $activity->legal_basis ?? '',
+            $activity->retention_period ?? '',
+            $activity->owner_name ?? '',
+        ]);
+
+        return RegisterExport::csv('processing-activities.csv', $headers, $rows);
+    }
+
+    public function exportPdf()
+    {
+        $this->authorize('viewAny', ProcessingActivity::class);
+
+        $headers = ['Reference', 'Activity', 'Legal Basis', 'Retention Period', 'Owner'];
+
+        $rows = ProcessingActivity::query()->orderBy('name')->get()->map(fn ($activity) => [
+            $activity->ref_no,
+            $activity->name,
+            $activity->legal_basis ?? '',
+            $activity->retention_period ?? '',
+            $activity->owner_name ?? '',
+        ]);
+
+        return RegisterExport::pdf('Processing Activities Register (RoPA)', $headers, $rows, 'processing-activities.pdf');
     }
 }

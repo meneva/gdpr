@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDpiaRequest;
 use App\Http\Requests\UpdateDpiaRequest;
 use App\Models\Dpia;
+use App\Support\Exports\RegisterExport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -81,5 +82,41 @@ class DpiaController extends Controller
         $dpia->delete();
 
         return redirect()->route('dpias.index')->with('status', 'Deleted.');
+    }
+
+    public function exportCsv()
+    {
+        $this->authorize('viewAny', Dpia::class);
+
+        $headers = ['Reference', 'Project', 'Owner', 'Risk', 'Review Due', 'Status'];
+
+        $rows = Dpia::query()->orderBy('due_at')->get()->map(fn ($dpia) => [
+            $dpia->ref_no,
+            $dpia->project_name,
+            $dpia->owner_name ?? '',
+            ucfirst($dpia->risk_level),
+            $dpia->due_at->format('Y-m-d'),
+            ucfirst(str_replace('_', ' ', $dpia->status)),
+        ]);
+
+        return RegisterExport::csv('dpias.csv', $headers, $rows);
+    }
+
+    public function exportPdf()
+    {
+        $this->authorize('viewAny', Dpia::class);
+
+        $headers = ['Reference', 'Project', 'Owner', 'Risk', 'Review Due', 'Status'];
+
+        $rows = Dpia::query()->orderBy('due_at')->get()->map(fn ($dpia) => [
+            $dpia->ref_no,
+            $dpia->project_name,
+            $dpia->owner_name ?? '',
+            ucfirst($dpia->risk_level),
+            $dpia->due_at->format('d M Y'),
+            ucfirst(str_replace('_', ' ', $dpia->status)),
+        ]);
+
+        return RegisterExport::pdf('DPIA Register', $headers, $rows, 'dpias.pdf');
     }
 }

@@ -4,9 +4,13 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Breaches &amp; Incidents
             </h2>
-            <a href="{{ route('breaches.create') }}">
-                <x-button>Report incident</x-button>
-            </a>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('breaches.export.csv') }}" class="text-xs font-mono uppercase tracking-wide text-ink-500 hover:text-ink-900">CSV</a>
+                <a href="{{ route('breaches.export.pdf') }}" class="text-xs font-mono uppercase tracking-wide text-ink-500 hover:text-ink-900">PDF</a>
+                <a href="{{ route('breaches.create') }}">
+                    <x-button>Report incident</x-button>
+                </a>
+            </div>
         </div>
     </x-slot>
 

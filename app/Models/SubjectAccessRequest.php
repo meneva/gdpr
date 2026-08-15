@@ -14,13 +14,14 @@ class SubjectAccessRequest extends Model
 
     protected $fillable = [
         'company_id', 'requester_name', 'requester_type', 'received_at',
-        'deadline_at', 'status', 'assigned_to', 'notes', 'closed_at',
+        'deadline_at', 'status', 'assigned_to', 'notes', 'closed_at', 'reminder_sent_at',
     ];
 
     protected $casts = [
         'received_at' => 'date',
         'deadline_at' => 'date',
         'closed_at' => 'datetime',
+        'reminder_sent_at' => 'datetime',
     ];
 
     protected static function booted(): void

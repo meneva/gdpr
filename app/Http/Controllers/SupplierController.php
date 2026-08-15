@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
 use App\Models\Supplier;
+use App\Support\Exports\RegisterExport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -70,5 +71,41 @@ class SupplierController extends Controller
         $supplier->delete();
 
         return redirect()->route('suppliers.index')->with('status', 'Deleted.');
+    }
+
+    public function exportCsv()
+    {
+        $this->authorize('viewAny', Supplier::class);
+
+        $headers = ['Reference', 'Supplier', 'Category', 'DPA on file', 'Risk', 'Last reviewed'];
+
+        $rows = Supplier::query()->orderBy('name')->get()->map(fn ($supplier) => [
+            $supplier->ref_no,
+            $supplier->name,
+            $supplier->category ?? '',
+            $supplier->dpa_on_file ? 'Yes' : 'No',
+            ucfirst($supplier->risk_level),
+            $supplier->last_reviewed_at?->format('Y-m-d') ?? '',
+        ]);
+
+        return RegisterExport::csv('suppliers.csv', $headers, $rows);
+    }
+
+    public function exportPdf()
+    {
+        $this->authorize('viewAny', Supplier::class);
+
+        $headers = ['Reference', 'Supplier', 'Category', 'DPA on file', 'Risk', 'Last reviewed'];
+
+        $rows = Supplier::query()->orderBy('name')->get()->map(fn ($supplier) => [
+            $supplier->ref_no,
+            $supplier->name,
+            $supplier->category ?? '',
+            $supplier->dpa_on_file ? 'Yes' : 'No',
+            ucfirst($supplier->risk_level),
+            $supplier->last_reviewed_at?->format('d M Y') ?? '',
+        ]);
+
+        return RegisterExport::pdf('Suppliers & Processors Register', $headers, $rows, 'suppliers.pdf');
     }
 }

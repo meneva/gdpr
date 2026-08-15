@@ -32,7 +32,7 @@
             </div>
 
             <!-- Aggregate cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <a href="{{ route('sars.index') }}" class="block bg-white border border-ink-100 rounded-lg p-5 hover:border-ink-300 transition">
                     <div class="font-mono text-[11px] uppercase tracking-wide text-ink-400">Subject Requests</div>
                     <div class="font-serif text-3xl font-semibold text-ink-900 mt-1">{{ $openSarsCount }}</div>
@@ -65,6 +65,12 @@
                     <div class="font-mono text-[11px] uppercase tracking-wide text-ink-400">Processing Activities</div>
                     <div class="font-serif text-3xl font-semibold text-ink-900 mt-1">{{ $ropaCount }}</div>
                     <div class="text-xs text-gray-500 mt-1">logged in your RoPA</div>
+                </a>
+
+                <a href="{{ route('training-courses.index') }}" class="block bg-white border border-ink-100 rounded-lg p-5 hover:border-ink-300 transition">
+                    <div class="font-mono text-[11px] uppercase tracking-wide text-ink-400">Training Completion</div>
+                    <div class="font-serif text-3xl font-semibold text-ink-900 mt-1">{{ $trainingPct !== null ? $trainingPct.'%' : '—' }}</div>
+                    <div class="text-xs text-gray-500 mt-1">{{ $trainingPct !== null ? 'across all courses' : 'no roster yet' }}</div>
                 </a>
             </div>
 
